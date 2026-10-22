@@ -1,0 +1,32 @@
+# Copies the archives listed in SHA256SUMS from the upstream k2-fsa/sherpa-onnx
+# "tts-models" release into the release voices-v1 of this repo. Each download is
+# verified against SHA256SUMS first, so the assets are byte-identical copies.
+name: publish-voices
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify
+        run: |
+          set -euo pipefail
+          mkdir dist
+          while read -r sum name; do
+            curl --fail --location --silent --show-error -o "dist/$name" \
+              "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/$name"
+          done < SHA256SUMS
+          (cd dist && sha256sum -c ../SHA256SUMS)
+          ls -l dist
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release view voices-v1 >/dev/null 2>&1 || gh release create voices-v1 \
+            --title "Voices v1" \
+            --notes "Byte-identical copies of upstream Piper voice archives. See README.md and SHA256SUMS."
+          gh release upload voices-v1 dist/*.tar.bz2 --clobber
