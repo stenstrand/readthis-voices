@@ -4,6 +4,10 @@
 name: publish-voices
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - SHA256SUMS
+      - .github/workflows/publish-voices.yml
 permissions:
   contents: write
 jobs:
