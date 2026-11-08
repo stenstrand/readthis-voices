@@ -10,3 +10,5 @@ Download URL pattern: `https://github.com/stenstrand/readthis-voices/releases/do
 
 Only voices whose licence allows redistribution are mirrored. The licence and attribution of each voice is in
 [LICENSES.md](LICENSES.md). Each archive also carries its own model card or README with the licence text from its author.
+
+Publishing is on demand only (no build runs on push): after changing `SHA256SUMS`, run `gh workflow run publish-voices.yml --repo stenstrand/readthis-voices`, or Actions, "publish-voices", "Run workflow".

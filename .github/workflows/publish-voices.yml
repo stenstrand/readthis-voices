@@ -2,12 +2,9 @@
 # "tts-models" release into the release voices-v1 of this repo. Each download is
 # verified against SHA256SUMS first, so the assets are byte-identical copies.
 name: publish-voices
+# On demand only (MIC-1054): no push trigger. Run: gh workflow run publish-voices.yml
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - SHA256SUMS
-      - .github/workflows/publish-voices.yml
 permissions:
   contents: write
 jobs:
